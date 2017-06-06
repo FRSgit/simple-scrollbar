@@ -52,7 +52,7 @@
 }
 
 .ss-scroll:hover::before, .ss-scroll.ss-grabbed::before {
-  width: 8px;
+  width: 6px;
 }
 
 .ss-hidden > .ss-scroll {
