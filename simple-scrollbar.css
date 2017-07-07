@@ -5,6 +5,7 @@
 
 .ss-container {
   position: relative;
+  overflow-x: hidden;
 }
 
 .ss-content {
@@ -28,7 +29,7 @@
   width: 12px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity .25s ease-in-out;
+  transition: opacity .25s ease-in-out, top .2s ease-out;
   -o-user-select: none;
   -ms-user-select: none;
   -moz-user-select: none;
