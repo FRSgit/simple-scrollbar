@@ -1,13 +1,40 @@
 (function(w, d) {
-  var raf = w.requestAnimationFrame || w.setImmediate || function(c) { return setTimeout(c, 0); };
+  var raf = w.requestAnimationFrame || w.mozRequestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.setImmediate || function(c) { return setTimeout(c, 0); };
 
   function initEl(el) {
     if (el.hasOwnProperty('data-simple-scrollbar')) return;
     Object.defineProperty(el, 'data-simple-scrollbar', new SimpleScrollbar(el));
   }
 
+  function throttle (_fn, _timeout) {
+    var timeoutId,
+        timer = 0;
+
+    return function (e) {
+      clearTimeout(timeoutId);
+
+      if (Date.now() > timer) {
+        resolve(e);
+      } else {
+        timeoutId = setTimeout(
+          resolve.bind(void 0, e),
+          _timeout
+        );
+      }
+    };
+
+    /////
+
+    function resolve (e) {
+      _fn(e);
+      timeoutId = void 0;
+      timer = Date.now() + _timeout;
+    }
+  }
+
   // Mouse drag handler
   function dragDealer(el, context) {
+    var dragHandler = drag;
     var lastPageY;
 
     el.addEventListener('mousedown', function(e) {
@@ -15,8 +42,8 @@
       el.classList.add('ss-grabbed');
       d.body.classList.add('ss-grabbed');
 
-      d.addEventListener('mousemove', drag);
-      d.addEventListener('mouseup', stop);
+      w.addEventListener('mousemove', dragHandler);
+      w.addEventListener('mouseup', stop);
 
       return false;
     });
@@ -33,72 +60,60 @@
     function stop() {
       el.classList.remove('ss-grabbed');
       d.body.classList.remove('ss-grabbed');
-      d.removeEventListener('mousemove', drag);
-      d.removeEventListener('mouseup', stop);
+      w.removeEventListener('mousemove', dragHandler);
+      w.removeEventListener('mouseup', stop);
     }
   }
 
   // Constructor
   function ss(el) {
-    this.target = el;
-    this.bar = '<div class="ss-scroll">';
+    var self = this;
 
-    this.wrapper = d.createElement('div');
-    this.wrapper.setAttribute('class', 'ss-wrapper');
+    self.target = el;
+    
+    self.bar = '<div class="ss-scroll">';
 
-    this.el = d.createElement('div');
-    this.el.setAttribute('class', 'ss-content');
+    self.el = d.createElement('div');
+    self.el.setAttribute('class', 'ss-content');
 
-    this.wrapper.appendChild(this.el);
-
-    while (this.target.firstChild) {
-      this.el.appendChild(this.target.firstChild);
+    while (self.target.firstChild) {
+      self.el.appendChild(self.target.firstChild);
     }
-    this.target.appendChild(this.wrapper);
+    self.target.appendChild(self.el);
 
-    this.target.insertAdjacentHTML('beforeend', this.bar);
-    this.bar = this.target.lastChild;
+    self.target.insertAdjacentHTML('beforeend', self.bar);
+    self.bar = self.target.lastChild;
 
-    dragDealer(this.bar, this);
-    this.moveBar();
+    dragDealer(self.bar, self);
+    self.moveBar();
 
-    this.el.addEventListener('scroll', this.moveBar.bind(this));
-    this.el.addEventListener('mouseenter', this.moveBar.bind(this));
+    self.el.addEventListener('scroll', throttle(self.moveBar.bind(self), 30));
+    self.el.addEventListener('mouseenter', self.moveBar.bind(self));
 
-    this.target.classList.add('ss-container');
+    self.target.classList.add('ss-container');
   }
 
   ss.prototype = {
     moveBar: function(e) {
-      var totalHeight = this.el.scrollHeight,
-          ownHeight = this.el.clientHeight,
-          _this = this;
+      var self = this,
+          totalHeight = self.el.scrollHeight,
+          ownHeight = self.el.clientHeight;
 
-      this.scrollRatio = ownHeight / totalHeight;
+      self.scrollRatio = ownHeight / totalHeight;
 
       raf(function() {
         // Hide scrollbar if no scrolling is possible
-        if(_this.scrollRatio === 1) {
-          _this.bar.classList.add('ss-hidden')
+        if(self.scrollRatio >= 1) {
+          self.target.classList.add('ss-hidden');
         } else {
-          _this.bar.classList.remove('ss-hidden')
-          _this.bar.style.cssText = 'height:' + (_this.scrollRatio) * 100 + '%; top:' + (_this.el.scrollTop / totalHeight ) * 100 + '%;right:-' + (_this.target.clientWidth - _this.bar.clientWidth) + 'px;';
+          self.target.classList.remove('ss-hidden');
+          self.bar.style.cssText = 'height:' + (self.scrollRatio) * 100 + '%; top:' + (self.el.scrollTop / totalHeight ) * 100 + '%;';
         }
       });
     }
   }
 
-  function initAll() {
-    var nodes = d.querySelectorAll('*[ss-container]');
-
-    for (var i = 0; i < nodes.length; i++) {
-      initEl(nodes[i]);
-    }
-  }
-
-  d.addEventListener('DOMContentLoaded', initAll);
   ss.initEl = initEl;
-  ss.initAll = initAll;
 
   w.SimpleScrollbar = ss;
 })(window, document);

@@ -1,42 +1,63 @@
-.ss-wrapper {
-    overflow : hidden;
-    height   : 100%;
-    position : relative;
-    z-index  : 1;
-    float: left;
+.ss-container, .ss-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.ss-container {
+  position: relative;
+  overflow-x: hidden;
 }
 
 .ss-content {
-    height          : 100%;
-    width           : 100%;
-    padding         : 0 32px 0 0;
-    position        : relative;
-    right           : -18px;
-    overflow        : auto;
-    -moz-box-sizing : border-box;
-    box-sizing      : border-box;
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  margin-right: -17px;
+  padding: 0 17px 0 0;
+  overflow: hidden;
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  overflow-y: overlay;
+  box-sizing: border-box;
 }
 
 .ss-scroll {
-  position            : relative;
-  background          : rgba(0, 0, 0, .1);
-  width               : 9px;
-  border-radius       : 4px;
-  top                 : 0;
-  z-index             : 2;
-  cursor              : pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 12px;
+  cursor: pointer;
   opacity: 0;
-  transition: opacity 0.25s linear;
+  transition: opacity .25s ease-in-out, top .2s ease-out;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.ss-scroll::before {
+  content: "";
+  position: relative;
+  top: 1%;
+  display: block;
+  margin: 0 3px 0 auto;
+  width: 4px;
+  height: 98%;
+  background: #b7b7b7;
+  border-radius: 4px;
+  transition: .25s width ease-in-out;
 }
 
 .ss-container:hover .ss-scroll {
   opacity: 1;
 }
 
-.ss-grabbed {
-     user-select: none;
-     -o-user-select: none;
-     -moz-user-select: none;
-     -khtml-user-select: none;
-     -webkit-user-select: none;
+.ss-scroll:hover::before, .ss-scroll.ss-grabbed::before {
+  width: 6px;
+}
+
+.ss-hidden > .ss-scroll {
+  display: none;
 }
