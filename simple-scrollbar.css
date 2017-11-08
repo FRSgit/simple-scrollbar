@@ -39,10 +39,12 @@
 
 .ss-scroll::before {
   content: "";
+  position: relative;
+  top: 1%;
   display: block;
+  margin: 0 3px 0 auto;
   width: 4px;
   height: 98%;
-  margin: 1% 3px 0 auto;
   background: #b7b7b7;
   border-radius: 4px;
   transition: .25s width ease-in-out;
