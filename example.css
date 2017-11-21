@@ -1,0 +1,12 @@
+.scroll-container-first {
+	display: inline-block;
+	height: 150px;
+	max-width: 200px;
+	vertical-align: top;
+}
+
+.scroll-container-second {
+	display: flex;
+	height: 400px;
+	max-width: 350px;
+}

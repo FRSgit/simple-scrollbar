@@ -12,13 +12,14 @@
   position: relative;
   z-index: 1;
   flex: 1 1 auto;
+  align-self: stretch;
   margin-right: -17px;
   padding: 0 17px 0 0;
+  height: 100%;
   overflow: hidden;
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar;
   overflow-y: overlay;
-  box-sizing: border-box;
 }
 
 .ss-scroll {
