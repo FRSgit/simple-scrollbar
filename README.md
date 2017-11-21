@@ -14,13 +14,7 @@ http://frsgit.github.io/simple-scrollbar
 
 ## Browser Support
 
-It was developed for evergreen browsers, but it works both on IE10 and IE11 either.
-
-If you want to make it works down to IE9, the only thing you need to do is to add the [classList polyfill](https://github.com/eligrey/classList.js).
-
-```HTML
-<!--[if IE 9]><script src="classList.min.js"></script><![endif]-->
-```
+It was developed for evergreen browsers, but it works on IE11 either.
 
 ## Usage
 ### Binding
